@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* temp test – if Tailwind works the page bg will be gray */
+:root { color-scheme: light; }

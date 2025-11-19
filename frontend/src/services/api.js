@@ -20,7 +20,7 @@ export const getHealth = () => api.get("/api/health");
 // Employees
 export const getEmployees = (params) => api.get("/api/employees", { params });
 export const getEmployee = (id) => api.get(`/api/employees/${id}`);
-
+export const getRanges = () => api.get('/api/analytics/ranges');
 // Analytics
 export const getRiskDistribution = () => api.get("/api/analytics/risk-distribution");
 export const getDepartmentSizes = () => api.get("/api/analytics/department-sizes");

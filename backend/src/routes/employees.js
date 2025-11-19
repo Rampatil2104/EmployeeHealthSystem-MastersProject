@@ -8,17 +8,19 @@ const router = Router();
  * Query: page, limit, department, risk, search
  */
 router.get('/', async (req, res) => {
-  const page = Math.max(parseInt(req.query.page || '1'), 1);
-  const limit = Math.min(Math.max(parseInt(req.query.limit || '100'), 1), 1000);
+  const page = Math.max(parseInt(req.query.page || '1', 10), 1);
+  const limit = Math.min(Math.max(parseInt(req.query.limit || '100', 10), 1), 1000);
 
   const filter = {};
   if (req.query.department) filter.Department = req.query.department;
   if (req.query.risk) filter.RiskCategory2 = req.query.risk;
-  if (req.query.search) {
+
+  const term = (req.query.q ?? req.query.search ?? '').toString().trim();
+  if (term) {
     filter.$or = [
-      { EmployeeID: new RegExp(req.query.search, 'i') },
-      { Department: new RegExp(req.query.search, 'i') },
-      { JobRole: new RegExp(req.query.search, 'i') }
+      { EmployeeID: new RegExp(term, 'i') },
+      { Department: new RegExp(term, 'i') },
+      { JobRole: new RegExp(term, 'i') }
     ];
   }
 

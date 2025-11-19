@@ -14,7 +14,7 @@ export default function Navbar() {
         <NavLink to="/" className={link}>Summary View</NavLink>
         <NavLink to="/group" className={link}>Group View</NavLink>
         <NavLink to="/individual" className={link}>Individual View</NavLink>
-        <DarkModeToggle />
+        
       </div>
     </div>
   );

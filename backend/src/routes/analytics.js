@@ -356,5 +356,37 @@ router.get('/dept-risk-sankey', async (req, res) => {
   res.json({ nodes, links });
 });
 
+router.get('/ranges', async (_req, res) => {
+  const fields = ['AvgSteps','VeryActiveMinutes','SedentaryMinutes','AvgCalories',
+                  'RestingHeartRate','SystolicBP','DiastolicBP','Sleep Duration'];
+  const pipe = fields.map(f => ({ 
+    $group: { _id: null, 
+      [`${f}_min`]: { $min: `$${f}` }, 
+      [`${f}_max`]: { $max: `$${f}` } 
+    } 
+  }));
+  const flat = await mongoose.connection.db
+    .collection('employees')
+    .aggregate([
+      {
+        $group: {
+          _id: null,
+          AvgSteps_min: { $min: '$AvgSteps' }, AvgSteps_max: { $max: '$AvgSteps' },
+          VeryActiveMinutes_min: { $min: '$VeryActiveMinutes' }, VeryActiveMinutes_max: { $max: '$VeryActiveMinutes' },
+          SedentaryMinutes_min: { $min: '$SedentaryMinutes' }, SedentaryMinutes_max: { $max: '$SedentaryMinutes' },
+          AvgCalories_min: { $min: '$AvgCalories' }, AvgCalories_max: { $max: '$AvgCalories' },
+          RestingHeartRate_min: { $min: '$RestingHeartRate' }, RestingHeartRate_max: { $max: '$RestingHeartRate' },
+          SystolicBP_min: { $min: '$SystolicBP' }, SystolicBP_max: { $max: '$SystolicBP' },
+          DiastolicBP_min: { $min: '$DiastolicBP' }, DiastolicBP_max: { $max: '$DiastolicBP' },
+          Sleep_min: { $min: '$Sleep Duration' }, Sleep_max: { $max: '$Sleep Duration' },
+        }
+      },
+      { $project: { _id: 0 } }
+    ])
+    .toArray();
+
+  res.json(flat[0] || {});
+});
+
 router.get('/ping', (req, res) => res.json({ ok: true, router: 'analytics' }));
 export default router;
